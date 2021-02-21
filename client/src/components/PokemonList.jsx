@@ -6,7 +6,7 @@ var PokemonList = (props) => {
     <div>
       {props.pokemon.map((item, index) => {
         return (
-        <PokemonEntry item={item} key={index} />
+        <PokemonEntry item={item} key={index} name={props.name} getAll={props.getAll} />
         )
       })}
     </div>

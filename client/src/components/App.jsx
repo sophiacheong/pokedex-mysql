@@ -7,7 +7,7 @@ class App extends React.Component {
     super(props)
     this.state = {
       pokemon: [],
-      types: 'Sort by Type'
+      types: 'Sort by Type',
     }
     this.onChangeValue = this.onChangeValue.bind(this);
     this.getAll = this.getAll.bind(this);
@@ -27,7 +27,7 @@ class App extends React.Component {
         var result = results.data.filter(item => item.type === this.state.types)
         this.setState({
           pokemon: result
-        }, () => { console.log(this.state.pokemon )})
+        })
       })
       .catch((err) => { console.error(err) })
   }
@@ -58,7 +58,7 @@ class App extends React.Component {
           <option>Water</option>
         </select>
         <div>
-          <PokemonList pokemon={this.state.pokemon} />
+          <PokemonList pokemon={this.state.pokemon} getAll={this.getAll} />
         </div>
       </div>
     )

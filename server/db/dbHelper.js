@@ -8,9 +8,11 @@ const dbHelpers = {
       callback(err, results)
     })
   },
-  // post: () => {
-
-  // }
+  update: (req, callback) => {
+    db.query(`UPDATE pokemon SET name='${req.body.name}' WHERE id=${req.params.id}`, (err, results) => {
+      callback(err, results);
+    })
+  }
 }
 
 module.exports = dbHelpers
