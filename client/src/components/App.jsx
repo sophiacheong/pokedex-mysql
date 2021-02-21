@@ -8,12 +8,63 @@ class App extends React.Component {
     this.state = {
       pokemon: [],
       types: 'Sort by Type',
-      typesList: []
+      typesList: [],
+      newName: '',
+      photo: '',
+      photoId: 0,
+      typeId: 0
     }
     this.onChangeValue = this.onChangeValue.bind(this);
     this.getAll = this.getAll.bind(this);
     this.onClickShowAll = this.onClickShowAll.bind(this);
+    this.newPokemonName = this.newPokemonName.bind(this);
     this.getAllTypes = this.getAllTypes.bind(this);
+    this.addingPokemon = this.addingPokemon.bind(this);
+    this.onChangeType = this.onChangeType.bind(this);
+    this.getPhotoId = this.getPhotoId.bind(this);
+  }
+
+  getPhotoId() {
+    axios.get('/api/photo')
+      .then((results) => {
+        this.setState({
+          photoId: results.data[results.data.length-1].id + 1
+        })
+      })
+  }
+
+  addingPokemon() {
+    axios.post('/api/photo', {
+      img: this.state.photo
+    })
+      .then(() => {
+        axios.get('/api/photo')
+        .then((results) => {
+          this.setState({
+            photoId: results.data[results.data.length-1].id
+          })
+        })
+      })
+      .then(() =>
+        axios.post('/api', {
+          "name": this.state.newName,
+          "typeNum": Number(this.state.typeId),
+          "imageNum": Number(this.state.photoId)
+        })
+          .then(() => {
+            alert('Added Pokemon')
+          })
+      )
+        .then(() => {
+          this.getAll();
+        })
+        .catch((err) => {console.error(err)})
+  }
+
+  newPokemonName(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
   }
 
   getAllTypes() {
@@ -30,9 +81,15 @@ class App extends React.Component {
     this.getAll()
   }
 
+  onChangeType(e) {
+    this.setState({
+      typeId: e.target.options.selectedIndex + 1
+    })
+  }
+
   onChangeValue(e) {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
     axios.get('/api')
       .then((results) => {
@@ -57,6 +114,7 @@ class App extends React.Component {
   componentDidMount() {
     this.getAll();
     this.getAllTypes();
+    this.getPhotoId();
   }
 
   render() {
@@ -69,6 +127,16 @@ class App extends React.Component {
             <option key={index}>{item.type}</option>
           ))}
         </select>
+        <div>
+          <input name="newName" placeholder="name" onChange={this.newPokemonName} />
+          <input name="photo" placeholder="Photo IMG" onChange={this.newPokemonName} />
+          <select name="types" onChange={this.onChangeType}>
+            {this.state.typesList.map((item) => (
+              <option key={item.id}>{item.type}</option>
+            ))}
+          </select>
+          <button onClick={this.addingPokemon}>Add Pokemon</button>
+        </div>
         <div>
           <PokemonList pokemon={this.state.pokemon} getAll={this.getAll} />
         </div>

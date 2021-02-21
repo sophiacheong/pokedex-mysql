@@ -43,3 +43,31 @@ app.delete('/api/:id', (req, res) => {
     else res.status(200).send(results)
   })
 })
+
+app.post('/api', (req, res) => {
+  dbHelpers.post(req, (err, results) => {
+    if (err) res.status(404).send(err)
+    else res.status(200).send('Posted')
+  })
+})
+
+app.post('/api/photo', (req, res) => {
+  dbHelpers.postPhoto(req, (err, results) => {
+    if (err) res.status(404).send(err)
+    else res.status(200).send('Posted')
+  })
+})
+
+app.get('/api/photo', (req, res) => {
+  dbHelpers.getPhoto((err, results) => {
+    if (err) res.status(4040).send(err)
+    else res.status(200).send(results)
+  })
+})
+
+// app.post('/api/type', (req, res) => {
+//   dbHelpers.postType(req, (err, results) => {
+//     if (err) res.status(404).send(err)
+//     else res.status(200).send('Posted')
+//   })
+// })
