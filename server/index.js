@@ -29,3 +29,10 @@ app.patch('/api/:id', (req, res) => {
     else res.status(200).send(results)
   })
 })
+
+app.delete('/api/:id', (req, res) => {
+  dbHelpers.delete(req, (err, results) => {
+    if (err) res.status(404).send(err)
+    else res.status(200).send(results)
+  })
+})

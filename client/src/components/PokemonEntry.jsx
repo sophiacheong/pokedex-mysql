@@ -11,6 +11,18 @@ class PokemonEntry extends React.Component {
     this.onClickView = this.onClickView.bind(this);
     this.onChangeValue = this.onChangeValue.bind(this);
     this.onUpdateClick = this.onUpdateClick.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+  }
+
+  onDeleteClick(id) {
+    axios.delete(`/api/${id}`)
+      .then(() => {
+        alert('Deleted...')
+      })
+      .then(() => {
+        this.props.getAll()
+      })
+      .catch((err) => console.error(err))
   }
 
   onUpdateClick(id) {
@@ -52,6 +64,7 @@ class PokemonEntry extends React.Component {
         </h3>
         <img src={this.props.item.img}></img>
         <div>Type: {this.props.item.type}</div>
+        <button onClick={() => {this.onDeleteClick(this.props.item.id)}}> Delete Pokemon :( </button>
       </div>
       )
     } else {
@@ -62,6 +75,9 @@ class PokemonEntry extends React.Component {
           </h3>
           <img src={this.props.item.img}></img>
           <div>Type: {this.props.item.type}</div>
+          <div>
+            <button onClick={() => {this.onDeleteClick(this.props.item.id)}}>Delete Pokemon :( </button>
+          </div>
         </div>
       )
     }
