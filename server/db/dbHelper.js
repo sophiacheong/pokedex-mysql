@@ -25,7 +25,25 @@ const dbHelpers = {
     WHERE pokemon.id=${req.params.id}`, (err, results) => {
       callback(err, results);
     })
+  },
+  post: (req, callback) => {
+    db.query(`INSERT INTO pokemon (name, typeNum, imageNum) VALUES ('${req.body.name}', ${req.body.typeNum}, ${req.body.imageNum})`, (err, results) => {
+      callback(err, results);
+    })
+  },
+  postPhoto: (req, callback) => {
+    db.query(`INSERT INTO images (img) VALUES ('${req.body.img}')`, (err, results) => {
+      callback(err, results);
+    })
+  },
+  getPhoto: (callback) => {
+    db.query(`SELECT * FROM images`, (err, results) => {
+      callback(err, results);
+    })
   }
+  // postType(`INSERT INTO types VALUES ('${req.body.type}')`, (err, results) => {
+  //   callback(err, results);
+  // })
 }
 
 module.exports = dbHelpers
