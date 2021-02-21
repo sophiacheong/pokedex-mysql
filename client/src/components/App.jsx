@@ -1,28 +1,68 @@
 import React from 'react';
+import axios from 'axios';
+import PokemonList from './PokemonList.jsx';
 
-const App = () => (
-  <div>
-    <h1>Fullstack Pokedex!</h1>
-    <button>Show All</button>
-    <select id="types">
-      <option>Sort by Type</option>
-      <option>Grass</option>
-      <option>Fire</option>
-      <option>Water</option>
-    </select>
-    <div>
-      <h3>Bulbasaur</h3>
-      <img src="http://vignette4.wikia.nocookie.net/nintendo/images/4/43/Bulbasaur.png/revision/latest?cb=20141002083518&path-prefix=en" />
-    </div>
-    <div>
-      <h3>Ivysaur</h3>
-      <img src="http://vignette3.wikia.nocookie.net/nintendo/images/8/86/Ivysaur.png/revision/latest?cb=20141002083450&path-prefix=en" />
-    </div>
-    <div>
-      <h3>Venusaur</h3>
-      <img src="http://vignette2.wikia.nocookie.net/nintendo/images/b/be/Venusaur.png/revision/latest?cb=20141002083423&path-prefix=en" />
-    </div>
-  </div>
-)
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      pokemon: [],
+      types: 'Sort by Type'
+    }
+    this.onChangeValue = this.onChangeValue.bind(this);
+    this.getAll = this.getAll.bind(this);
+    this.onClickShowAll = this.onClickShowAll.bind(this);
+  }
+
+  onClickShowAll() {
+    this.getAll()
+  }
+
+  onChangeValue(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    axios.get('/api')
+      .then((results) => {
+        var result = results.data.filter(item => item.type === this.state.types)
+        this.setState({
+          pokemon: result
+        }, () => { console.log(this.state.pokemon )})
+      })
+      .catch((err) => { console.error(err) })
+  }
+
+  getAll() {
+    axios.get('/api')
+    .then((results) => {
+      this.setState({
+        pokemon: results.data
+      })
+    })
+    .catch((err) => { console.error(err) })
+  }
+
+  componentDidMount() {
+    this.getAll();
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Fullstack Pokedex!</h1>
+        <button onClick={this.onClickShowAll}>Show All</button>
+        <select name="types" onChange={this.onChangeValue}>
+          <option>Sort by Type</option>
+          <option>Grass</option>
+          <option>Fire</option>
+          <option>Water</option>
+        </select>
+        <div>
+          <PokemonList pokemon={this.state.pokemon} />
+        </div>
+      </div>
+    )
+  }
+}
 
 export default App;
