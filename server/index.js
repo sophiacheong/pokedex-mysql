@@ -16,6 +16,13 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 
 app.listen(PORT, () => { console.log(`LISTENING AT PORT ${PORT}`) });
 
+app.get('/types', (req, res) => {
+  dbHelpers.getTypes((err, results) => {
+    if (err) res.status(404).send(err)
+    else res.status(200).send(results)
+  })
+})
+
 app.get('/api', (req, res) => {
   dbHelpers.get((err, results) => {
     if (err) res.status(404).send(err)

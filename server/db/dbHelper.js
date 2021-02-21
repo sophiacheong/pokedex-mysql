@@ -1,6 +1,11 @@
 const db = require('./index.js');
 
 const dbHelpers = {
+  getTypes: (callback) => {
+    db.query(`SELECT * FROM types`, (err, results) => {
+      callback(err, results)
+    })
+  },
   get: (callback ) => {
     db.query(`SELECT pokemon.id, name, images.img, types.type FROM pokemon
     INNER JOIN images ON pokemon.imageNum = images.id

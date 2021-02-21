@@ -8,10 +8,22 @@ class App extends React.Component {
     this.state = {
       pokemon: [],
       types: 'Sort by Type',
+      typesList: []
     }
     this.onChangeValue = this.onChangeValue.bind(this);
     this.getAll = this.getAll.bind(this);
     this.onClickShowAll = this.onClickShowAll.bind(this);
+    this.getAllTypes = this.getAllTypes.bind(this);
+  }
+
+  getAllTypes() {
+    axios.get('/types')
+      .then((result) => {
+        this.setState({
+          typesList: result.data
+        })
+      })
+      .catch((err) => console.error(err))
   }
 
   onClickShowAll() {
@@ -44,6 +56,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getAll();
+    this.getAllTypes();
   }
 
   render() {
@@ -52,10 +65,9 @@ class App extends React.Component {
         <h1>Fullstack Pokedex!</h1>
         <button onClick={this.onClickShowAll}>Show All</button>
         <select name="types" onChange={this.onChangeValue}>
-          <option>Sort by Type</option>
-          <option>Grass</option>
-          <option>Fire</option>
-          <option>Water</option>
+          {this.state.typesList.map((item, index) => (
+            <option key={index}>{item.type}</option>
+          ))}
         </select>
         <div>
           <PokemonList pokemon={this.state.pokemon} getAll={this.getAll} />
